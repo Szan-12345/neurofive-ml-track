@@ -7,26 +7,26 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
-# 1. Load California Housing Dataset from scikit-learn
+# Load California Housing Dataset from scikit-learn
 housing = fetch_california_housing(as_frame=True)
 df = housing.frame
 
-# 2. Select 3-5 features that most affect price
+# Select 3-5 features that most affect price
 # Features: MedInc (Median Income), HouseAge (House Age), AveRooms (Average Rooms), AveOccup (Average Occupancy)
 selected_features = ["MedInc", "HouseAge", "AveRooms", "AveOccup"]
 X = df[selected_features]
 y = df["MedHouseVal"]  # Target variable: House value in hundreds of thousands
 
-# 3. Split dataset into training and testing sets (80% train, 20% test)
+#  Split dataset into training and testing sets (80% train, 20% test)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# 4. Train Linear Regression Model
+#  Train Linear Regression Model
 model = LinearRegression()
 model.fit(X_train, y_train)
 
-# 5. Evaluate Performance
+#  Evaluate Performance
 y_pred = model.predict(X_test)
 rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 r2 = r2_score(y_test, y_pred)
@@ -35,7 +35,7 @@ print(f"Model Evaluation Metrics:")
 print(f"--- RMSE (Root Mean Squared Error): {rmse:.4f}")
 print(f"--- R² Score: {r2:.4f}")
 
-# 6. Scatter Plot: Predicted vs. Actual Prices
+# Scatter Plot: Predicted vs. Actual Prices
 plt.figure(figsize=(8, 6))
 plt.scatter(y_test, y_pred, alpha=0.3, color="teal")
 plt.plot(

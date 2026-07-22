@@ -67,3 +67,9 @@ false positives and false negatives individually.
 - Recall: Out of all actual positive cases, how many did the model find?
 - F1-score: The harmonic mean of Precision and Recall, balancing both metrics.
 """
+# Titanic Survival Prediction - Advanced ML Track
+
+## Updates & Hyperparameter Tuning
+# Evaluation Metrics:Added `classification_report` tracking Precision, Recall, and F1-score to handle class distribution balance safely.
+# Hyperparameter Tuning: Implemented `GridSearchCV` to optimize the regularization parameter `C` and solver algorithms.
+# Results: Documented performance variations before and after tuning.
