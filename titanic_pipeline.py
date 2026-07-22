@@ -9,10 +9,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 
-# 1. Load Dataset
+#  Load Dataset
 df = pd.read_csv("Titanic-Dataset.csv")
 
-# 2. Feature Engineering (Creating 2 new features)
+#  Feature Engineering (Creating 2 new features)
 # - family_size: Total family members onboard (SibSp + Parch + 1 for the passenger themselves)
 # - fare_per_age: Ratio of ticket fare to passenger age
 df["family_size"] = df["SibSp"] + df["Parch"] + 1
@@ -30,7 +30,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# 3. Identify Numerical and Categorical Columns
+#  Identify Numerical and Categorical Columns
 numerical_cols = X.select_dtypes(
     include=["int64", "float64"]
 ).columns.tolist()
@@ -38,7 +38,7 @@ categorical_cols = X.select_dtypes(
     include=["object", "bool", "category"]
 ).columns.tolist()
 
-# 4. Create Preprocessing Pipelines for Numerical and Categorical data
+#  Create Preprocessing Pipelines for Numerical and Categorical data
 numeric_transformer = Pipeline(
     steps=[
         ("imputer", SimpleImputer(strategy="median")),
@@ -61,7 +61,7 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# 5. Chain Preprocessing and Model into a Single Pipeline
+#  Chain Preprocessing and Model into a Single Pipeline
 # Using RandomForestClassifier to leverage the newly engineered features effectively
 pipeline = Pipeline(
     steps=[
@@ -70,7 +70,7 @@ pipeline = Pipeline(
     ]
 )
 
-# 6. Fit and Evaluate the Pipeline
+#  Fit and Evaluate the Pipeline
 pipeline.fit(X_train, y_train)
 y_pred = pipeline.predict(X_test)
 
@@ -80,7 +80,7 @@ print(f"Pipeline Test Accuracy: {accuracy * 100:.2f}%\n")
 print("Classification Report:")
 print(classification_report(y_test, y_pred))
 
-# 7. Save Final Pipeline Using Joblib
+#  Save Final Pipeline Using Joblib
 joblib.dump(pipeline, "titanic_pipeline_model.pkl")
 print(
     "Pipeline successfully trained and saved as 'titanic_pipeline_model.pkl'!"
