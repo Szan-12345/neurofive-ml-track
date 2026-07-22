@@ -56,4 +56,4 @@ Throughout this internship track, I progressed from foundational exploratory dat
 └── README.md                       # Project documentation
 ## 🌐 Live Web App
 Check out the live interactive machine learning application here:
-🔗 [Customer Churn Predictor App](http://localhost:8501)
+🔗 [Customer Churn Predictor App](https://neurofive-churn-app.streamlit.app))
