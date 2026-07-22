@@ -54,3 +54,6 @@ Throughout this internship track, I progressed from foundational exploratory dat
 ├── ensemble_comparison.py          # Random Forest & XGBoost model comparison
 ├── .gitignore                      # Git exclusion rules (large datasets excluded)
 └── README.md                       # Project documentation
+## 🌐 Live Web App
+Check out the live interactive machine learning application here:
+🔗 [Customer Churn Predictor App](http://localhost:8501)
