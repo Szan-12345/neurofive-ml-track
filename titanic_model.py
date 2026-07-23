@@ -46,14 +46,4 @@ Confusion Matrix Breakdown:
 - False Negatives (Bottom-Left): Passengers incorrectly predicted as did not survive (Type II error).
 - True Positives (Bottom-Right): Passengers correctly predicted as survived.
 """
-# # Titanic Survival Prediction - Machine Learning Track
 
-## Overview:This repository contains the exploratory data analysis and baseline Logistic Regression model built for the Titanic machine learning challenge.
-
-## Approach & Steps
-# 1. **Data Cleaning:** Dropped irrelevant or highly sparse columns (`Cabin`, `Name`, `Ticket`, `PassengerId`). Imputed missing `Age` values with the median and `Embarked` with the mode.
-# 2. **Encoding:** Converted categorical variables (`Sex`, `Embarked`) into numerical format using Pandas One-Hot Encoding (`pd.get_dummies`).
-# 3. **Model Training:** Split data into an 80/20 training/test split and trained a `LogisticRegression` classifier.
-# 4. **Evaluation:** Evaluated performance using accuracy metrics and a confusion matrix.
-
-## Final Results:Accuracy: ~80-81% on the test dataset.
