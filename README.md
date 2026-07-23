@@ -41,7 +41,14 @@ Throughout this internship track, I progressed from foundational exploratory dat
   * **Random Forest (Bagging):** Built independent trees in parallel and averaged predictions via majority vote.
   * **XGBoost (Boosting):** Sequentially built optimized trees to correct residual errors from previous iterations.
 * **Feature Importance Analysis:** Visualized and compared how each algorithm weighs critical variables (e.g., gender, passenger class, fare ratios).
+| Model               | Type                             | Evaluation Metric |      Score |
+| :------------------ | :------------------------------- | :---------------: | ---------: |
+| Logistic Regression | Single Model (Linear Classifier) |      Accuracy     | **79.89%** |
+| Random Forest       | Ensemble (Bagging)               |      Accuracy     | **78.21%** |
+| XGBoost             | Ensemble (Boosting)              |      Accuracy     | **77.65%** |
+Interpretation
 
+Logistic Regression achieved the highest accuracy (79.89%) on the Titanic dataset, outperforming both ensemble methods in this experiment. Random Forest achieved 78.21%, while XGBoost achieved 77.65%. This demonstrates that ensemble methods do not always outperform simpler models; their effectiveness depends on the dataset, feature engineering, and hyperparameter tuning. With further tuning (e.g., adjusting tree depth, learning rate, or number of estimators), Random Forest and XGBoost may achieve better performance
 ### Imbalanced Data Handling & Evaluation Metrics
 * **Objective:** Address real-world class imbalance (such as fraud detection and customer churn) where traditional accuracy becomes misleading.
 * **Techniques Used:** Applied **SMOTE (Synthetic Minority Over-sampling Technique)** to balance training class distributions.
