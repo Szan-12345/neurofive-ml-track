@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import GridSearchCV, train_test_split
 
-#  Load and prepare dataset (same pipeline as before)
+# Load and prepare dataset (same pipeline as before)
 df = pd.read_csv("Titanic-Dataset.csv")
 df = df.drop(columns=["Cabin", "Name", "Ticket", "PassengerId"])
 df["Age"] = df["Age"].fillna(df["Age"].median())
@@ -14,12 +14,12 @@ df = pd.get_dummies(df, columns=["Sex", "Embarked"], drop_first=True)
 X = df.drop(columns=["Survived"])
 y = df["Survived"]
 
-#  Split dataset
+# Split dataset
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# BASELINE MODEL 
+# BASELINE MODEL
 base_model = LogisticRegression(max_iter=500)
 base_model.fit(X_train, y_train)
 base_pred = base_model.predict(X_test)
@@ -30,7 +30,7 @@ print(f"Baseline Accuracy: {base_acc * 100:.2f}%")
 print("\nClassification Report:")
 print(classification_report(y_test, base_pred))
 
-# HYPERPARAMETER TUNING USING GridSearchCV 
+# HYPERPARAMETER TUNING USING GridSearchCV
 # Tuning 'C' (regularization strength) and 'solver' (optimization algorithm)
 param_grid = {
     "C": [0.01, 0.1, 1.0, 10.0, 100.0],
@@ -56,20 +56,45 @@ print(f"Tuned Model Accuracy: {tuned_acc * 100:.2f}%")
 print("\nClassification Report:")
 print(classification_report(y_test, tuned_pred))
 
-#  EXPLANATION OF PRECISION, RECALL, F1 & ACCURACY LIMITATIONS 
-"""
-Why accuracy alone can be misleading for imbalanced datasets:
-If a dataset has 95% of samples belonging to one class and 5% to another, a dummy model that 
-predicts the majority class every time will achieve 95% accuracy while completely failing to detect 
-the minority class. Precision, Recall, and F1-score fix this by evaluating how well the model handles 
-false positives and false negatives individually.
-- Precision: Out of all positive predictions, how many were actually correct?
-- Recall: Out of all actual positive cases, how many did the model find?
-- F1-score: The harmonic mean of Precision and Recall, balancing both metrics.
-"""
-# Titanic Survival Prediction - Advanced ML Track
+# BEFORE/AFTER COMPARISON TABLE
+# Pulled from the real classification_report output (not retyped by hand), so this
+# stays accurate even if the data, split, or grid changes later.
+base_report = classification_report(y_test, base_pred, output_dict=True)
+tuned_report = classification_report(y_test, tuned_pred, output_dict=True)
 
-## Updates & Hyperparameter Tuning
-# Evaluation Metrics:Added `classification_report` tracking Precision, Recall, and F1-score to handle class distribution balance safely.
-# Hyperparameter Tuning: Implemented `GridSearchCV` to optimize the regularization parameter `C` and solver algorithms.
-# Results: Documented performance variations before and after tuning.
+comparison = pd.DataFrame({
+    "Metric": ["Accuracy", "Precision (Survived)", "Recall (Survived)", "F1-score (Survived)"],
+    "Baseline": [
+        base_acc,
+        base_report["1"]["precision"],
+        base_report["1"]["recall"],
+        base_report["1"]["f1-score"],
+    ],
+    "Tuned (GridSearchCV)": [
+        tuned_acc,
+        tuned_report["1"]["precision"],
+        tuned_report["1"]["recall"],
+        tuned_report["1"]["f1-score"],
+    ],
+}).round(4)
+
+print("\n=== BEFORE vs AFTER COMPARISON TABLE ===")
+print(comparison.to_string(index=False))
+
+# EXPLANATION OF PRECISION, RECALL, F1 & ACCURACY LIMITATIONS
+survived_share = y.mean() * 100
+imbalance_explanation = f"""
+Why accuracy alone can be misleading for imbalanced datasets:
+If a dataset has 95% of samples belonging to one class and 5% to another, a dummy model
+that predicts the majority class every time will achieve 95% accuracy while completely
+failing to detect the minority class. Precision, Recall, and F1-score fix this by
+evaluating how well the model handles false positives and false negatives individually.
+ Precision: Out of all positive predictions, how many were actually correct?
+ Recall: Out of all actual positive cases, how many did the model find?
+ F1-score: The harmonic mean of Precision and Recall, balancing both metrics.
+
+Note: this Titanic dataset is only mildly imbalanced ({survived_share:.1f}% survived vs.
+{100 - survived_share:.1f}% did not), not the extreme 95/5 case above that example
+illustrates the general risk, not a claim that this specific dataset has that problem.
+"""
+print(imbalance_explanation)
