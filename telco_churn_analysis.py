@@ -5,6 +5,7 @@ import seaborn as sns
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 
 # 1. Load Dataset
@@ -17,11 +18,18 @@ df["TotalCharges"] = df["TotalCharges"].fillna(df["TotalCharges"].median())
 
 # Drop customerID if present
 if "customerID" in df.columns:
-  df.drop(columns=["customerID"], inplace=True)
+    df.drop(columns=["customerID"], inplace=True)
 
-# 3. Handle Categorical Variables & Class Imbalance Note
-# Note on Class Imbalance: Churn datasets typically have fewer churned customers (~26%), 
-# making accuracy a secondary metric compared to Recall/F1-score.
+# --- EDA & CLASS BALANCE CHECK (Before get_dummies) ---
+print("=== EDA: CLASS BALANCE ===")
+class_counts = df["Churn"].value_counts(normalize=True) * 100
+print(f"Retained (No): {class_counts['No']:.2f}% | Churned (Yes): {class_counts['Yes']:.2f}%")
+
+print("\n=== EDA: CHURN RATE BY CONTRACT TYPE ===")
+contract_churn = df.groupby("Contract")["Churn"].value_counts(normalize=True).unstack() * 100
+print(contract_churn)
+
+# 3. Handle Categorical Variables
 df = pd.get_dummies(df, drop_first=True)
 
 # Target variable is Churn_Yes
@@ -33,19 +41,24 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# 4. Train Models: Logistic Regression vs. Decision Tree
-# Logistic Regression
-lr_model = LogisticRegression(max_iter=1000)
-lr_model.fit(X_train, y_train)
-lr_pred = lr_model.predict(X_test)
+# --- FEATURE SCALING FOR LOGISTIC REGRESSION ---
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
-# Decision Tree Classifier
+# 4. Train Models: Logistic Regression vs. Decision Tree
+# Logistic Regression (uses scaled data to prevent convergence warnings)
+lr_model = LogisticRegression(max_iter=1000)
+lr_model.fit(X_train_scaled, y_train)
+lr_pred = lr_model.predict(X_test_scaled)
+
+# Decision Tree Classifier (uses unscaled data)
 dt_model = DecisionTreeClassifier(random_state=42, max_depth=5)
 dt_model.fit(X_train, y_train)
 dt_pred = dt_model.predict(X_test)
 
 # 5. Evaluate Performance
-print("=== LOGISTIC REGRESSION ===")
+print("\n=== LOGISTIC REGRESSION ===")
 print(f"Accuracy: {accuracy_score(y_test, lr_pred)*100:.2f}%")
 print(classification_report(y_test, lr_pred))
 
